@@ -1,0 +1,6 @@
+{
+  "name": "Esfera Plana: Simulador de Geometría y Tiempo",
+  "description": "Un simulador 3D para visualizar la transición de un mundo redondo a la geometría plana de cerca, representando visualmente el paso del tiempo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
