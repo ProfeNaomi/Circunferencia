@@ -1,147 +1,193 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 type ElementType = 'centro' | 'radio' | 'diametro' | 'cuerda' | 'arco' | 'tangente' | 'secante' | null;
 
 const elementosDef = {
-  centro: { title: 'Centro', text: 'El punto interior equidistante a todos los puntos de la circunferencia.' },
-  radio: { title: 'Radio', text: 'Segmento que une el centro con cualquier punto de la circunferencia.' },
-  diametro: { title: 'Diámetro', text: 'Segmento que une dos puntos de la circunferencia pasando por el centro. Es el doble del radio.' },
-  cuerda: { title: 'Cuerda', text: 'Segmento que une dos puntos de la circunferencia sin pasar necesariamente por el centro.' },
-  arco: { title: 'Arco', text: 'Cada una de las partes en que una cuerda divide a la circunferencia.' },
-  tangente: { title: 'Tangente', text: 'Línea recta que toca a la circunferencia en un único punto exterior.' },
-  secante: { title: 'Secante', text: 'Línea recta que corta a la circunferencia en dos puntos.' },
+  centro: { 
+    title: 'Centro (O)', 
+    text: 'El punto interior equidistante a todos los puntos de la circunferencia. Matemáticamente, para cualquier punto P en ella, la distancia d(O, P) = r.' 
+  },
+  radio: { 
+    title: 'Radio (r)', 
+    text: 'Segmento de recta que conecta el centro con cualquier punto de la circunferencia. Su longitud constante define el tamaño de la figura.' 
+  },
+  diametro: { 
+    title: 'Diámetro (d)', 
+    text: 'La cuerda de máxima longitud que pasa por el centro y conecta dos puntos opuestos. Su longitud es exactamente el doble del radio: d = 2r.' 
+  },
+  cuerda: { 
+    title: 'Cuerda', 
+    text: 'Segmento rectilíneo cuyos extremos son dos puntos cualesquiera sobre la circunferencia. El diámetro es una cuerda especial que pasa por el centro.' 
+  },
+  arco: { 
+    title: 'Arco', 
+    text: 'Una porción continua de la circunferencia limitada por dos puntos de ella (los extremos de una cuerda).' 
+  },
+  tangente: { 
+    title: 'Línea Tangente', 
+    text: 'Recta coplanar que interseca a la circunferencia en un único punto común, llamado punto de tangencia. Es perpendicular al radio en dicho punto.' 
+  },
+  secante: { 
+    title: 'Línea Secante', 
+    text: 'Recta coplanar que interseca a la circunferencia en exactamente dos puntos distintos.' 
+  },
 };
 
 export function Elementos() {
   const [activeElement, setActiveElement] = useState<ElementType>(null);
 
-  const isActive = (el: ElementType) => activeElement === el || activeElement === null;
+  // Si no hay elemento activo, todos se ven atenuados, excepto la circunferencia base.
+  // Si hay elemento activo, el activo tiene opacidad 1 y el resto opacidad 0.15.
+  const getOpacity = (el: ElementType) => {
+    if (activeElement === null) return 0.25;
+    if (activeElement === el) return 1;
+    return 0.1;
+  };
 
   return (
     <motion.section 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-6xl mx-auto p-8 w-full flex-grow flex flex-col justify-center"
+      className="max-w-6xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col justify-center pb-24"
     >
       <div className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
           Elementos del <span className="text-indigo-600">Círculo</span>
         </h1>
         <p className="text-xl text-slate-500 max-w-2xl mx-auto">
-          Pasa el cursor sobre los botones para aislar cada elemento.
+          Haz clic en cada botón para explorar y revelar las definiciones matemáticas formales.
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
+      <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start mb-8">
         
         {/* Interactive Viewer */}
         <div className="relative aspect-square w-full max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl p-8 flex items-center justify-center shadow-md">
-          <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+          <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible transition-opacity duration-500">
             {/* Base Circunferencia */}
-            <circle cx="50" cy="50" r="40" stroke="#cbd5e1" strokeWidth="2" fill="transparent" />
+            <circle cx="50" cy="50" r="40" stroke="#cbd5e1" strokeWidth="1.5" fill="transparent" />
             
             {/* Centro */}
             <motion.circle 
-              cx="50" cy="50" r="2" 
+              cx="50" cy="50" r="2.5" 
               fill="#334155"
-              animate={{ opacity: isActive('centro') ? 1 : 0.2, scale: activeElement === 'centro' ? 1.5 : 1 }} 
+              animate={{ opacity: getOpacity('centro'), scale: activeElement === 'centro' ? 1.5 : 1 }} 
+              transition={{ duration: 0.3 }}
             />
             
             {/* Radio */}
             <motion.line 
               x1="50" y1="50" x2="90" y2="50" 
-              stroke="#ec4899" strokeWidth="3"
+              stroke="#ec4899" strokeWidth="2.5"
               strokeLinecap="round"
-              animate={{ opacity: activeElement === 'radio' ? 1 : 0 }} 
+              animate={{ opacity: getOpacity('radio') }} 
+              transition={{ duration: 0.3 }}
             />
             
             {/* Diámetro */}
             <motion.line 
               x1="10" y1="50" x2="90" y2="50" 
-              stroke="#8b5cf6" strokeWidth="3"
+              stroke="#8b5cf6" strokeWidth="2.5"
               strokeLinecap="round"
-              animate={{ opacity: activeElement === 'diametro' ? 1 : 0 }} 
+              animate={{ opacity: getOpacity('diametro') }} 
+              transition={{ duration: 0.3 }}
             />
             
             {/* Cuerda */}
             <motion.line 
               x1="21.7" y1="21.7" x2="84.6" y2="70" 
-              stroke="#10b981" strokeWidth="3"
+              stroke="#10b981" strokeWidth="2.5"
               strokeLinecap="round"
-              animate={{ opacity: activeElement === 'cuerda' ? 1 : 0 }} 
+              animate={{ opacity: getOpacity('cuerda') }} 
+              transition={{ duration: 0.3 }}
             />
             
             {/* Arco */}
             <motion.path 
               d="M 50 10 A 40 40 0 0 1 90 50" 
-              stroke="#f59e0b" strokeWidth="5" fill="transparent"
+              stroke="#f59e0b" strokeWidth="4" fill="transparent"
               strokeLinecap="round"
-              animate={{ opacity: activeElement === 'arco' ? 1 : 0 }} 
+              animate={{ opacity: getOpacity('arco') }} 
+              transition={{ duration: 0.3 }}
             />
             
             {/* Tangente (toca en 50, 90) */}
-            <motion.line 
-              x1="20" y1="90" x2="80" y2="90" 
-              stroke="#3b82f6" strokeWidth="3"
-              strokeLinecap="round"
-              animate={{ opacity: activeElement === 'tangente' ? 1 : 0 }} 
-            />
-            <motion.circle cx="50" cy="90" r="1.5" fill="#3b82f6" animate={{ opacity: activeElement === 'tangente' ? 1 : 0 }} />
+            <motion.g animate={{ opacity: getOpacity('tangente') }} transition={{ duration: 0.3 }}>
+              <line x1="15" y1="90" x2="85" y2="90" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="50" cy="90" r="1.5" fill="#3b82f6" />
+            </motion.g>
 
             {/* Secante */}
             <motion.line 
-              x1="10" y1="30" x2="90" y2="70" 
-              stroke="#ef4444" strokeWidth="3"
+              x1="5" y1="25" x2="95" y2="75" 
+              stroke="#ef4444" strokeWidth="2.5"
               strokeLinecap="round"
-              animate={{ opacity: activeElement === 'secante' ? 1 : 0 }} 
+              animate={{ opacity: getOpacity('secante') }} 
+              transition={{ duration: 0.3 }}
             />
           </svg>
         </div>
 
-        {/* Controls & Definitions */}
+        {/* Controls */}
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {(Object.keys(elementosDef) as ElementType[]).filter(Boolean).map((key) => {
               const k = key!;
+              const isActive = activeElement === k;
               return (
                 <button
                   key={k}
-                  onMouseEnter={() => setActiveElement(k)}
-                  onMouseLeave={() => setActiveElement(null)}
                   onClick={() => setActiveElement(k)}
-                  className={`p-3 rounded-xl border text-left font-medium transition-all ${
-                    activeElement === k 
-                      ? 'bg-indigo-50 border-indigo-200 shadow-md scale-105 z-10 text-indigo-700' 
-                      : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300'
+                  className={`p-4 rounded-xl border text-center font-bold text-lg transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-indigo-600 border-indigo-700 text-white shadow-lg scale-105 z-10' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 shadow-sm'
                   }`}
                 >
-                  {elementosDef[k].title}
+                  {elementosDef[k].title.split(' ')[0]}
                 </button>
               );
             })}
           </div>
-
-          <div className="mt-8 p-6 bg-white border border-slate-200 shadow-sm rounded-2xl min-h-[160px]">
-            {activeElement ? (
-              <motion.div
-                key={activeElement}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <h3 className="text-2xl font-bold text-slate-800 mb-2">{elementosDef[activeElement].title}</h3>
-                <p className="text-slate-600 leading-relaxed">{elementosDef[activeElement].text}</p>
-              </motion.div>
-            ) : (
-              <div className="h-full flex items-center justify-center text-slate-400 italic">
-                Selecciona un elemento de la lista
-              </div>
-            )}
-          </div>
         </div>
 
       </div>
+
+      {/* Large Definition Card at the Bottom */}
+      <div className="w-full mt-4">
+        <AnimatePresence mode="wait">
+          {activeElement ? (
+            <motion.div
+              key={activeElement}
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.98 }}
+              transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
+              className="w-full bg-white border-2 border-indigo-100 shadow-xl rounded-3xl p-8 md:p-12"
+            >
+              <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight text-indigo-900">
+                {elementosDef[activeElement].title}
+              </h3>
+              <p className="text-xl md:text-2xl text-slate-700 leading-relaxed font-medium">
+                {elementosDef[activeElement].text}
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full bg-slate-100/50 border-2 border-dashed border-slate-300 rounded-3xl p-12 flex items-center justify-center text-slate-400 italic text-xl"
+            >
+              Selecciona un elemento de la lista para ver su definición formal.
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
     </motion.section>
   );
 }

@@ -51,8 +51,9 @@ export function RetroHero({ year }: { year: number }) {
 
     // Mapear el año (1990 - 2025) a un nivel de detalle en Three.js (0 a 6)
     const detail = useMemo(() => {
-        const mapped = Math.floor((year - 1985) / 6); 
-        return Math.max(0, Math.min(6, mapped));
+        if (year === 2026) return 12; // Máximo detalle para ilusión perfecta
+        const mapped = Math.floor((year - 1990) / 6); 
+        return Math.max(0, Math.min(5, mapped));
     }, [year]);
 
     // La IcosahedronGeometry con shading plano es perfecta:

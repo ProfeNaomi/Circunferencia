@@ -1,11 +1,12 @@
 import { motion } from 'motion/react';
-import { Circle, Ruler, Disc, Box, Dumbbell, MonitorPlay } from 'lucide-react';
+import { Circle, Ruler, Disc, Box, Dumbbell, MonitorPlay, Navigation } from 'lucide-react';
 
 const tabs = [
   { id: 'conceptos', label: 'Conceptos', icon: Circle },
   { id: 'elementos', label: 'Elementos', icon: Disc },
   { id: 'perimetro', label: 'Perímetro', icon: Ruler },
   { id: 'area', label: 'Área', icon: Box },
+  { id: 'relaciones', label: 'Métricas', icon: Navigation },
   { id: 'ejercicios', label: 'Ejercicios', icon: Dumbbell },
   { id: 'resolucion', label: 'La Ilusión (3D)', icon: MonitorPlay },
 ];
