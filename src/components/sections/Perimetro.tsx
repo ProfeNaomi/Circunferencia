@@ -106,8 +106,15 @@ export function Perimetro() {
                 transition={{ duration: 0 }}
               >
                 <circle cx="20" cy={50 - radius} r={radius} fill="none" stroke="#6366f1" strokeWidth="1.5" />
-                <line x1="20" y1={50 - radius} x2="20" y2="50" stroke="#ec4899" strokeWidth="1" />
-                <circle cx="20" cy="50" r="1.5" fill="#ec4899" />
+                
+                {/* 4 Spokes to make it look like a wheel */}
+                <line x1="20" y1={50 - radius * 0.8} x2="20" y2={50 - radius + radius * 0.8} stroke="#cbd5e1" strokeWidth="1" />
+                <line x1={20 - radius * 0.8} y1={50 - radius} x2={20 + radius * 0.8} y2={50 - radius} stroke="#cbd5e1" strokeWidth="1" />
+                
+                {/* Highlight spoke that was initially touching the ground */}
+                <line x1="20" y1={50 - radius} x2="20" y2="50" stroke="#ec4899" strokeWidth="2" />
+                <circle cx="20" cy="50" r="2" fill="#ec4899" />
+                <circle cx="20" cy={50 - radius} r="1.5" fill="#6366f1" />
                 
                 {/* Scissors icon (simplified) that appears at start */}
                 {progress > 0 && progress < 5 && (

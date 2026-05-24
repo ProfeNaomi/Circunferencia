@@ -6,30 +6,30 @@ type ElementType = 'centro' | 'radio' | 'diametro' | 'cuerda' | 'arco' | 'tangen
 const elementosDef = {
   centro: { 
     title: 'Centro (O)', 
-    text: 'El punto interior equidistante a todos los puntos de la circunferencia. Matemáticamente, para cualquier punto P en ella, la distancia d(O, P) = r.' 
+    text: 'El punto interior equidistante a todos los puntos de la circunferencia. Matemáticamente, d(O, P) = r.' 
   },
   radio: { 
     title: 'Radio (r)', 
-    text: 'Segmento de recta que conecta el centro con cualquier punto de la circunferencia. Su longitud constante define el tamaño de la figura.' 
+    text: 'Segmento de recta que conecta el centro con cualquier punto de la circunferencia.' 
   },
   diametro: { 
     title: 'Diámetro (d)', 
-    text: 'La cuerda de máxima longitud que pasa por el centro y conecta dos puntos opuestos. Su longitud es exactamente el doble del radio: d = 2r.' 
+    text: 'La cuerda de máxima longitud que pasa por el centro. Su longitud es exactamente el doble del radio: d = 2r.' 
   },
   cuerda: { 
     title: 'Cuerda', 
-    text: 'Segmento rectilíneo cuyos extremos son dos puntos cualesquiera sobre la circunferencia. El diámetro es una cuerda especial que pasa por el centro.' 
+    text: 'Segmento rectilíneo cuyos extremos son dos puntos cualesquiera sobre la circunferencia.' 
   },
   arco: { 
     title: 'Arco', 
-    text: 'Una porción continua de la circunferencia limitada por dos puntos de ella (los extremos de una cuerda).' 
+    text: 'Una porción continua de la circunferencia limitada por dos puntos.' 
   },
   tangente: { 
-    title: 'Línea Tangente', 
+    title: 'Tangente', 
     text: 'Recta coplanar que interseca a la circunferencia en un único punto común, llamado punto de tangencia. Es perpendicular al radio en dicho punto.' 
   },
   secante: { 
-    title: 'Línea Secante', 
+    title: 'Secante', 
     text: 'Recta coplanar que interseca a la circunferencia en exactamente dos puntos distintos.' 
   },
 };
@@ -37,8 +37,6 @@ const elementosDef = {
 export function Elementos() {
   const [activeElement, setActiveElement] = useState<ElementType>(null);
 
-  // Si no hay elemento activo, todos se ven atenuados, excepto la circunferencia base.
-  // Si hay elemento activo, el activo tiene opacidad 1 y el resto opacidad 0.15.
   const getOpacity = (el: ElementType) => {
     if (activeElement === null) return 0.25;
     if (activeElement === el) return 1;
@@ -50,9 +48,9 @@ export function Elementos() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-6xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col justify-center pb-24"
+      className="max-w-7xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col justify-center pb-12"
     >
-      <div className="text-center mb-10">
+      <div className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
           Elementos del <span className="text-indigo-600">Círculo</span>
         </h1>
@@ -61,10 +59,65 @@ export function Elementos() {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_400px] gap-12 items-start mb-8">
+      <div className="grid lg:grid-cols-[1.5fr_1fr] gap-12 items-start h-full">
         
-        {/* Interactive Viewer */}
-        <div className="relative aspect-square w-full max-w-2xl mx-auto bg-white border border-slate-200 rounded-3xl p-8 flex items-center justify-center shadow-md">
+        {/* Left Side: Controls and Info */}
+        <div className="flex flex-col gap-6 h-full">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            {(Object.keys(elementosDef) as ElementType[]).filter(Boolean).map((key) => {
+              const k = key!;
+              const isActive = activeElement === k;
+              return (
+                <button
+                  key={k}
+                  onClick={() => setActiveElement(k)}
+                  className={`p-3 rounded-xl border text-center font-bold text-sm sm:text-base transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-indigo-600 border-indigo-700 text-white shadow-md scale-105 z-10' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 shadow-sm'
+                  }`}
+                >
+                  {elementosDef[k].title.split(' ')[0]}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="w-full flex-grow flex flex-col justify-center">
+            <AnimatePresence mode="wait">
+              {activeElement ? (
+                <motion.div
+                  key={activeElement}
+                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                  transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
+                  className="w-full bg-white border-2 border-indigo-100 shadow-xl rounded-[2rem] p-8"
+                >
+                  <h3 className="text-3xl font-extrabold text-slate-900 mb-4 tracking-tight text-indigo-900">
+                    {elementosDef[activeElement].title}
+                  </h3>
+                  <p className="text-lg text-slate-700 leading-relaxed font-medium">
+                    {elementosDef[activeElement].text}
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full bg-slate-100/50 border-2 border-dashed border-slate-300 rounded-[2rem] p-12 flex items-center justify-center text-slate-400 italic text-lg text-center"
+                >
+                  Selecciona un elemento de la cuadrícula superior para ver su definición formal.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Right Side: Interactive Viewer */}
+        <div className="relative aspect-square w-full max-w-lg mx-auto bg-white border-2 border-slate-200 rounded-[3rem] p-8 flex items-center justify-center shadow-lg">
           <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible transition-opacity duration-500">
             {/* Base Circunferencia */}
             <circle cx="50" cy="50" r="40" stroke="#cbd5e1" strokeWidth="1.5" fill="transparent" />
@@ -130,62 +183,6 @@ export function Elementos() {
           </svg>
         </div>
 
-        {/* Controls */}
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
-            {(Object.keys(elementosDef) as ElementType[]).filter(Boolean).map((key) => {
-              const k = key!;
-              const isActive = activeElement === k;
-              return (
-                <button
-                  key={k}
-                  onClick={() => setActiveElement(k)}
-                  className={`p-4 rounded-xl border text-center font-bold text-lg transition-all duration-300 ${
-                    isActive 
-                      ? 'bg-indigo-600 border-indigo-700 text-white shadow-lg scale-105 z-10' 
-                      : 'bg-white border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 shadow-sm'
-                  }`}
-                >
-                  {elementosDef[k].title.split(' ')[0]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-      </div>
-
-      {/* Large Definition Card at the Bottom */}
-      <div className="w-full mt-4">
-        <AnimatePresence mode="wait">
-          {activeElement ? (
-            <motion.div
-              key={activeElement}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
-              className="w-full bg-white border-2 border-indigo-100 shadow-xl rounded-3xl p-8 md:p-12"
-            >
-              <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight text-indigo-900">
-                {elementosDef[activeElement].title}
-              </h3>
-              <p className="text-xl md:text-2xl text-slate-700 leading-relaxed font-medium">
-                {elementosDef[activeElement].text}
-              </p>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="w-full bg-slate-100/50 border-2 border-dashed border-slate-300 rounded-3xl p-12 flex items-center justify-center text-slate-400 italic text-xl"
-            >
-              Selecciona un elemento de la lista para ver su definición formal.
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
     </motion.section>

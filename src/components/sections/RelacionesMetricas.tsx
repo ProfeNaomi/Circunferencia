@@ -252,65 +252,65 @@ export function RelacionesMetricas() {
 
                   {activeTheorem === 'secantes' && (
                     <motion.g key="secantes" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <circle cx="10" cy="100" r="4" fill="#1e293b" />
-                      <text x="-5" y="100" fontSize="14" fontWeight="bold">P</text>
+                      <circle cx="-20" cy="100" r="4" fill="#1e293b" />
+                      <text x="-35" y="100" fontSize="14" fontWeight="bold">P</text>
 
                       {/* Secant 1 */}
-                      <line x1="10" y1="100" x2="165" y2="75" stroke="#4f46e5" strokeWidth="4" />
-                      <circle cx="50" cy="93" r="4" fill="#4f46e5" />
-                      <circle cx="165" cy="75" r="4" fill="#4f46e5" />
-                      <text x="45" y="85" fontSize="12" fill="#4f46e5" fontWeight="bold">A</text>
-                      <text x="170" y="70" fontSize="12" fill="#4f46e5" fontWeight="bold">B</text>
+                      <line x1="-20" y1="100" x2="163" y2="69.5" stroke="#4f46e5" strokeWidth="4" />
+                      <circle cx="30.5" cy="91.5" r="4" fill="#4f46e5" />
+                      <circle cx="163" cy="69.5" r="4" fill="#4f46e5" />
+                      <text x="25" y="85" fontSize="14" fill="#4f46e5" fontWeight="bold">A</text>
+                      <text x="170" y="65" fontSize="14" fill="#4f46e5" fontWeight="bold">B</text>
 
                       {/* Secant 2 */}
-                      <line x1="10" y1="100" x2="165" y2="125" stroke="#db2777" strokeWidth="4" />
-                      <circle cx="50" cy="107" r="4" fill="#db2777" />
-                      <circle cx="165" cy="125" r="4" fill="#db2777" />
-                      <text x="45" y="125" fontSize="12" fill="#db2777" fontWeight="bold">C</text>
-                      <text x="170" y="135" fontSize="12" fill="#db2777" fontWeight="bold">D</text>
+                      <line x1="-20" y1="100" x2="163" y2="130.5" stroke="#db2777" strokeWidth="4" />
+                      <circle cx="30.5" cy="108.5" r="4" fill="#db2777" />
+                      <circle cx="163" cy="130.5" r="4" fill="#db2777" />
+                      <text x="25" y="125" fontSize="14" fill="#db2777" fontWeight="bold">C</text>
+                      <text x="170" y="140" fontSize="14" fill="#db2777" fontWeight="bold">D</text>
                     </motion.g>
                   )}
 
                   {activeTheorem === 'tangente' && (
                     <motion.g key="tangente" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <circle cx="10" cy="100" r="4" fill="#1e293b" />
-                      <text x="-5" y="100" fontSize="14" fontWeight="bold">P</text>
+                      <circle cx="-20" cy="100" r="4" fill="#1e293b" />
+                      <text x="-35" y="100" fontSize="14" fontWeight="bold">P</text>
 
                       {/* Tangent */}
-                      <line x1="10" y1="100" x2="100" y2="30" stroke="#f59e0b" strokeWidth="4" />
-                      <circle cx="100" cy="30" r="4" fill="#f59e0b" />
-                      <text x="100" y="20" fontSize="14" fill="#f59e0b" fontWeight="bold">T</text>
-                      <path d="M 50 60 Q 55 55 60 70" fill="none" stroke="#f59e0b" strokeWidth="2" />
-                      <text x="40" y="55" fontSize="16" fill="#f59e0b" fontWeight="bold">T</text>
+                      <line x1="-20" y1="100" x2="59.1" y2="43.1" stroke="#f59e0b" strokeWidth="4" />
+                      <circle cx="59.1" cy="43.1" r="4" fill="#f59e0b" />
+                      <text x="65" y="35" fontSize="14" fill="#f59e0b" fontWeight="bold">T</text>
+                      <path d="M 5 65 Q 15 55 25 80" fill="none" stroke="#f59e0b" strokeWidth="2" />
+                      <text x="0" y="60" fontSize="16" fill="#f59e0b" fontWeight="bold">T</text>
 
                       {/* Secant */}
-                      <line x1="10" y1="100" x2="165" y2="125" stroke="#db2777" strokeWidth="4" />
-                      <circle cx="50" cy="107" r="4" fill="#db2777" />
-                      <circle cx="165" cy="125" r="4" fill="#db2777" />
-                      <text x="45" y="125" fontSize="14" fill="#db2777" fontWeight="bold">A</text>
-                      <text x="170" y="135" fontSize="14" fill="#db2777" fontWeight="bold">B</text>
-                      <text x="120" y="110" fontSize="16" fill="#db2777" fontWeight="bold">S</text>
-                      <text x="30" y="118" fontSize="14" fill="#be185d" fontWeight="bold">E</text>
+                      <line x1="-20" y1="100" x2="163" y2="130.5" stroke="#db2777" strokeWidth="4" />
+                      <circle cx="30.5" cy="108.5" r="4" fill="#db2777" />
+                      <circle cx="163" cy="130.5" r="4" fill="#db2777" />
+                      <text x="25" y="125" fontSize="14" fill="#db2777" fontWeight="bold">A</text>
+                      <text x="170" y="140" fontSize="14" fill="#db2777" fontWeight="bold">B</text>
+                      <text x="100" y="115" fontSize="16" fill="#db2777" fontWeight="bold">S</text>
+                      <text x="0" y="118" fontSize="14" fill="#be185d" fontWeight="bold">E</text>
 
                     </motion.g>
                   )}
 
                   {activeTheorem === 'tangente_tangente' && (
                     <motion.g key="tangente_tangente" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <circle cx="20" cy="100" r="4" fill="#1e293b" />
-                      <text x="5" y="100" fontSize="14" fontWeight="bold">P</text>
+                      <circle cx="-20" cy="100" r="4" fill="#1e293b" />
+                      <text x="-35" y="100" fontSize="14" fontWeight="bold">P</text>
 
                       {/* Top Tangent */}
-                      <line x1="20" y1="100" x2="100" y2="30" stroke="#f59e0b" strokeWidth="4" />
-                      <circle cx="100" cy="30" r="4" fill="#f59e0b" />
-                      <text x="105" y="25" fontSize="14" fill="#f59e0b" fontWeight="bold">A</text>
-                      <text x="50" y="55" fontSize="16" fill="#f59e0b" fontWeight="bold">x</text>
+                      <line x1="-20" y1="100" x2="59.1" y2="43.1" stroke="#f59e0b" strokeWidth="4" />
+                      <circle cx="59.1" cy="43.1" r="4" fill="#f59e0b" />
+                      <text x="65" y="35" fontSize="14" fill="#f59e0b" fontWeight="bold">A</text>
+                      <text x="15" y="60" fontSize="16" fill="#f59e0b" fontWeight="bold">x</text>
 
                       {/* Bottom Tangent */}
-                      <line x1="20" y1="100" x2="100" y2="170" stroke="#f59e0b" strokeWidth="4" />
-                      <circle cx="100" cy="170" r="4" fill="#f59e0b" />
-                      <text x="105" y="185" fontSize="14" fill="#f59e0b" fontWeight="bold">B</text>
-                      <text x="50" y="155" fontSize="16" fill="#f59e0b" fontWeight="bold">x</text>
+                      <line x1="-20" y1="100" x2="59.1" y2="156.9" stroke="#f59e0b" strokeWidth="4" />
+                      <circle cx="59.1" cy="156.9" r="4" fill="#f59e0b" />
+                      <text x="65" y="170" fontSize="14" fill="#f59e0b" fontWeight="bold">B</text>
+                      <text x="15" y="145" fontSize="16" fill="#f59e0b" fontWeight="bold">x</text>
                     </motion.g>
                   )}
 

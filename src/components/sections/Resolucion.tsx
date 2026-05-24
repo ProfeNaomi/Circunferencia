@@ -23,7 +23,6 @@ function SceneLighting() {
 
 export function Resolucion() {
   const [year, setYear] = useState(2026);
-  const [character, setCharacter] = useState<'kirby'|'mario'|'link'>('kirby');
 
   return (
     <motion.section 
@@ -55,13 +54,6 @@ export function Resolucion() {
                     <span className="leading-relaxed"><strong className="text-slate-900">Observa desde todos los ángulos:</strong> Haz clic y arrastra para rotar la cámara.</span>
                   </li>
                 </ul>
-              </div>
-
-              {/* Character Selector */}
-              <div className="mt-6 flex gap-2">
-                <button onClick={() => setCharacter('kirby')} className={`px-4 py-2 rounded-lg font-bold transition-all ${character === 'kirby' ? 'bg-pink-500 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>Kirby</button>
-                <button onClick={() => setCharacter('mario')} className={`px-4 py-2 rounded-lg font-bold transition-all ${character === 'mario' ? 'bg-red-500 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>Mario</button>
-                <button onClick={() => setCharacter('link')} className={`px-4 py-2 rounded-lg font-bold transition-all ${character === 'link' ? 'bg-green-500 text-white shadow-md' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>Zelda (Link)</button>
               </div>
             </header>
 
@@ -105,9 +97,7 @@ export function Resolucion() {
             <color attach="background" args={['#f1f5f9']} />
             
             <SceneLighting />
-            
-            <RetroHero year={year} character={character} />
-            
+            <RetroHero year={year} />
             <OrbitControls 
               enablePan={false}
               minDistance={3.5}

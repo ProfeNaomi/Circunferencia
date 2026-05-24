@@ -138,39 +138,30 @@ export function Area() {
                 <g>
                   {/* Pizza Proof */}
                   {Array.from({ length: numSlices }).map((_, i) => {
-                    // Start state
                     const startRot = i * sliceAngle;
-                    
-                    // End state
-                    // We want to interlock them.
-                    // Even slices point UP. Odd slices point DOWN.
                     const isEven = i % 2 === 0;
-                    
-                    // Width of one slice arc base is roughly (2 * PI * r) / numSlices
-                    // Actually, rectBase / (numSlices / 2)
                     const sliceBaseWidth = rectBase / (numSlices / 2);
-                    
-                    // X position in rectangle
                     const pairIndex = Math.floor(i / 2);
-                    const rectX = rectStartX + pairIndex * sliceBaseWidth + (isEven ? sliceBaseWidth/2 : 0);
-                    const rectY = isEven ? cy + r/2 : cy - r/2;
+                    
+                    // Fixed interlocking logic
+                    // Odd slices point DOWN (arc at top) -> vertex at BOTTOM (cy + r/2)
+                    // Even slices point UP (arc at bottom) -> vertex at TOP (cy - r/2)
+                    const rectY = isEven ? cy - r/2 : cy + r/2;
                     const endRot = isEven ? 180 : 0;
+                    
+                    const rectX = rectStartX + pairIndex * sliceBaseWidth + (isEven ? sliceBaseWidth : sliceBaseWidth / 2);
 
-                    // Interpolate
-                    // We need a smooth transition. First explode out, then move to rect, then rotate
                     let currentX = cx;
                     let currentY = cy;
                     let currentRot = startRot;
 
                     if (p < 0.2) {
-                       // Do nothing, just circle
+                       // Do nothing
                     } else if (p < 0.5) {
-                       // Explode
                        const explodeP = (p - 0.2) / 0.3;
                        currentX += Math.cos((startRot - 90) * Math.PI / 180) * 20 * explodeP;
                        currentY += Math.sin((startRot - 90) * Math.PI / 180) * 20 * explodeP;
                     } else {
-                       // Move to rect and rotate
                        const moveP = (p - 0.5) / 0.5;
                        const explodedX = cx + Math.cos((startRot - 90) * Math.PI / 180) * 20;
                        const explodedY = cy + Math.sin((startRot - 90) * Math.PI / 180) * 20;
@@ -178,9 +169,8 @@ export function Area() {
                        currentX = explodedX + (rectX - explodedX) * moveP;
                        currentY = explodedY + (rectY - explodedY) * moveP;
                        
-                       // Interpolate rotation. Be careful with shortest path
                        let targetR = endRot;
-                       if (startRot > 270 && targetR === 0) targetR = 360; // fix spinning the wrong way
+                       if (startRot > 270 && targetR === 0) targetR = 360; 
                        currentRot = startRot + (targetR - startRot) * moveP;
                     }
 
@@ -201,11 +191,11 @@ export function Area() {
                   
                   {p > 0.8 && (
                      <g opacity={(p - 0.8) / 0.2}>
-                       <line x1={rectStartX} y1={cy + r + 5} x2={rectStartX + rectBase} y2={cy + r + 5} stroke="#1e293b" strokeWidth="1" />
-                       <text x="100" y={cy + r + 12} fontSize="5" fill="#1e293b" textAnchor="middle" fontWeight="bold">Base = π·r</text>
+                       <line x1={rectStartX} y1={cy + r/2 + 5} x2={rectStartX + rectBase} y2={cy + r/2 + 5} stroke="#1e293b" strokeWidth="1" />
+                       <text x="100" y={cy + r/2 + 12} fontSize="5" fill="#1e293b" textAnchor="middle" fontWeight="bold">Base = π·r</text>
                        
-                       <line x1={rectStartX - 5} y1={cy} x2={rectStartX - 5} y2={cy + r} stroke="#1e293b" strokeWidth="1" />
-                       <text x={rectStartX - 8} y={cy + r/2 + 2} fontSize="5" fill="#1e293b" textAnchor="end" fontWeight="bold">r</text>
+                       <line x1={rectStartX - 5} y1={cy - r/2} x2={rectStartX - 5} y2={cy + r/2} stroke="#1e293b" strokeWidth="1" />
+                       <text x={rectStartX - 8} y={cy + 2} fontSize="5" fill="#1e293b" textAnchor="end" fontWeight="bold">r</text>
                      </g>
                   )}
                 </g>
@@ -217,36 +207,30 @@ export function Area() {
                   {Array.from({ length: numRings }).map((_, i) => {
                     const ringR = maxR * ((i + 1) / numRings);
                     const ringWidth = maxR / numRings;
-                    
-                    // Length of the unrolled line
                     const lineLen = 2 * Math.PI * ringR;
                     
-                    // How much to unroll (0 to 1)
-                    // Let inner rings unroll first or all together? All together is cool.
                     let unrollP = 0;
                     if (p > 0.1) {
                       unrollP = Math.min(1, (p - 0.1) / 0.7);
                     }
 
-                    // To draw an unrolling circle, we draw an arc, and a straight line connected to it.
-                    // The arc goes from angle -90 to angle -90 - (360 * (1 - unrollP))
-                    // The line goes from the end of the arc straight down.
-
+                    // Fix: 360 degree arc bug
                     const currentAngleDeg = 360 * (1 - unrollP);
-                    const currentAngleRad = currentAngleDeg * Math.PI / 180;
+                    const safeAngleDeg = currentAngleDeg >= 360 ? 359.99 : currentAngleDeg;
+                    const currentAngleRad = safeAngleDeg * Math.PI / 180;
                     
-                    // Center of this specific ring might move down to form the triangle
-                    // In a triangle, base is at bottom, apex at top.
-                    // At p=1, ring y is cy + maxR, and it's a straight line of length lineLen.
-                    // Wait, Triangle: base is 2*PI*R, height is R.
-                    // Let's just drop them down.
                     const dropY = p > 0.8 ? (p - 0.8) / 0.2 * (maxR - ringR) : 0;
+                    
+                    // Center the unrolled shape and scale to fit viewBox
+                    const maxLineLen = 2 * Math.PI * maxR;
+                    const scaleFactor = 0.7;
+                    const startX = 100 - (maxLineLen * unrollP * scaleFactor) / 2;
 
                     return (
-                      <g key={i} transform={`translate(100, ${cy + dropY})`}>
+                      <g key={i} transform={`translate(${startX}, ${cy + dropY}) scale(${scaleFactor})`}>
                         {unrollP < 1 && (
                           <path 
-                            d={`M 0 ${-ringR} A ${ringR} ${ringR} 0 ${currentAngleDeg > 180 ? 1 : 0} 0 ${ringR * Math.cos(-Math.PI/2 - currentAngleRad)} ${ringR * Math.sin(-Math.PI/2 - currentAngleRad)}`}
+                            d={`M 0 ${-ringR} A ${ringR} ${ringR} 0 ${safeAngleDeg > 180 ? 1 : 0} 0 ${ringR * Math.cos(-Math.PI/2 - currentAngleRad)} ${ringR * Math.sin(-Math.PI/2 - currentAngleRad)}`}
                             fill="none" stroke="#f97316" strokeWidth={ringWidth - 0.5}
                             opacity={0.8}
                           />
@@ -271,11 +255,14 @@ export function Area() {
                   
                   {p > 0.8 && (
                      <g opacity={(p - 0.8) / 0.2}>
-                       <line x1={100} y1={cy + maxR + 5} x2={100 + 2 * Math.PI * maxR} y2={cy + maxR + 5} stroke="#1e293b" strokeWidth="1" />
-                       <text x={100 + Math.PI * maxR} y={cy + maxR + 12} fontSize="5" fill="#1e293b" textAnchor="middle" fontWeight="bold">Base = 2·π·r</text>
-                       
-                       <line x1={95} y1={cy} x2={95} y2={cy + maxR} stroke="#1e293b" strokeWidth="1" />
-                       <text x={92} y={cy + maxR/2 + 2} fontSize="5" fill="#1e293b" textAnchor="end" fontWeight="bold">r</text>
+                       <line 
+                         x1={100 - (2 * Math.PI * maxR * 0.7)/2} 
+                         y1={cy + maxR * 0.7 + 5} 
+                         x2={100 + (2 * Math.PI * maxR * 0.7)/2} 
+                         y2={cy + maxR * 0.7 + 5} 
+                         stroke="#1e293b" strokeWidth="1" 
+                       />
+                       <text x="100" y={cy + maxR * 0.7 + 12} fontSize="5" fill="#1e293b" textAnchor="middle" fontWeight="bold">Base = 2·π·r</text>
                      </g>
                   )}
                 </g>
@@ -284,34 +271,48 @@ export function Area() {
               {proof === 3 && (
                 <g>
                   {/* Exhaustion Proof */}
-                  <circle cx={cx} cy={cy} r={r} fill="none" stroke="#cbd5e1" strokeWidth="2" />
-                  
-                  <polygon 
-                    points={polyPoints} 
-                    fill="#10b981" 
-                    stroke="#059669" 
-                    strokeWidth="1"
-                    opacity={0.8}
-                  />
+                  <g transform="translate(-30, 0)">
+                    <circle cx={cx} cy={cy} r={r} fill="none" stroke="#cbd5e1" strokeWidth="2" />
+                    
+                    <polygon 
+                      points={polyPoints} 
+                      fill="#10b981" 
+                      stroke="#059669" 
+                      strokeWidth="1"
+                      opacity={0.8}
+                    />
 
-                  {/* Draw triangles for the polygon to show how it's made */}
-                  {numSides <= 12 && Array.from({ length: numSides }).map((_, i) => {
-                    const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
-                    return (
-                      <line 
-                        key={i}
-                        x1={cx} y1={cy} 
-                        x2={cx + r * Math.cos(angle)} y2={cy + r * Math.sin(angle)} 
-                        stroke="#059669" strokeWidth="0.5" opacity={0.5}
-                      />
-                    )
-                  })}
+                    {numSides <= 12 && Array.from({ length: numSides }).map((_, i) => {
+                      const angle = (i * 2 * Math.PI) / numSides - Math.PI / 2;
+                      return (
+                        <line 
+                          key={i}
+                          x1={cx} y1={cy} 
+                          x2={cx + r * Math.cos(angle)} y2={cy + r * Math.sin(angle)} 
+                          stroke="#059669" strokeWidth="0.5" opacity={0.5}
+                        />
+                      )
+                    })}
+                  </g>
 
-                  <text x="100" y="94" fontSize="6" fill="#64748b" textAnchor="middle" fontWeight="bold">
-                    Lados del Polígono: {numSides}
-                  </text>
-                  <text x="100" y="100" fontSize="5" fill="#10b981" textAnchor="middle" fontWeight="bold">
-                    Área = {areaPercent.toFixed(2)}% del Círculo
+                  {/* Formula Counter Panel */}
+                  <g transform="translate(130, 20)">
+                    <rect x="0" y="0" width="75" height="55" rx="4" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+                    <text x="37.5" y="10" fontSize="5" fill="#334155" textAnchor="middle" fontWeight="bold">Lados (n): {numSides}</text>
+                    
+                    <text x="5" y="20" fontSize="4" fill="#64748b">Apotema (a): {(r * Math.cos(Math.PI/numSides)).toFixed(1)}</text>
+                    <text x="5" y="28" fontSize="4" fill="#64748b">Perímetro (P): {(numSides * 2 * r * Math.sin(Math.PI/numSides)).toFixed(1)}</text>
+                    
+                    <line x1="5" y1="32" x2="70" y2="32" stroke="#e2e8f0" strokeWidth="0.5" />
+                    
+                    <text x="37.5" y="40" fontSize="4.5" fill="#10b981" textAnchor="middle" fontWeight="bold">Área = (P × a) / 2</text>
+                    <text x="37.5" y="48" fontSize="6" fill="#059669" textAnchor="middle" fontWeight="bold">
+                      {areaPercent.toFixed(2)}% del Círculo
+                    </text>
+                  </g>
+
+                  <text x="100" y="98" fontSize="6" fill="#64748b" textAnchor="middle" fontWeight="bold">
+                    El polígono se aproxima al círculo a medida que n → ∞
                   </text>
                 </g>
               )}
