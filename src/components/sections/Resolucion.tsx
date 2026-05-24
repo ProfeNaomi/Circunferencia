@@ -29,7 +29,7 @@ export function Resolucion() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-7xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col pb-24"
+      className="w-full px-4 sm:px-12 py-8 flex-grow flex flex-col pb-24"
     >
       <div className="grid lg:grid-cols-2 gap-12 items-start h-full min-h-[600px]">
         {/* UI Overlay - Left Side */}

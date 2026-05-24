@@ -26,7 +26,7 @@ export function CirculoVsCircunferencia() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-5xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col gap-12 pb-20"
+      className="w-full px-4 sm:px-12 py-8 flex-grow flex flex-col gap-12 pb-20"
     >
       <div className="text-center mt-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">

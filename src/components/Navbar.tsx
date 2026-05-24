@@ -18,9 +18,9 @@ interface NavbarProps {
 
 export function Navbar({ activeTab, setActiveTab }: NavbarProps) {
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 p-4 shadow-sm">
-      <div className="max-w-7xl mx-auto">
-        <ul className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 p-4 shadow-sm w-full">
+      <div className="w-full px-2 sm:px-8">
+        <ul className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

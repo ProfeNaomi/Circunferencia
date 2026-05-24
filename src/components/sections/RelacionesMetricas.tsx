@@ -54,7 +54,7 @@ export function RelacionesMetricas() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start max-w-7xl mx-auto w-full"
+            className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start mx-auto w-full"
           >
             {/* Visualizer */}
             <div className="bg-white border-2 border-slate-200 p-10 rounded-[3rem] shadow-lg flex flex-col items-center sticky top-24">
@@ -209,12 +209,14 @@ export function RelacionesMetricas() {
             key="segmentos"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start max-w-7xl mx-auto w-full"
+            className="grid lg:grid-cols-[1fr_1.5fr] gap-12 items-start mx-auto w-full"
           >
             {/* Visualizer */}
-            <div className="bg-white border-2 border-slate-200 p-10 rounded-[3rem] shadow-lg flex items-center justify-center aspect-square sticky top-24">
-              <svg viewBox="0 0 200 200" className="w-full max-w-[400px] overflow-visible">
+            <div className="bg-white border-2 border-slate-200 p-10 rounded-[3rem] shadow-lg flex items-center justify-center sticky top-24 transition-all duration-500">
+              <svg 
+                viewBox={['secantes', 'tangente', 'tangente_tangente'].includes(activeTheorem) ? "-40 0 240 200" : "0 0 200 200"} 
+                className="w-full max-w-[450px] overflow-visible transition-all duration-500"
+              >
                 <circle cx="100" cy="100" r="70" stroke="#cbd5e1" strokeWidth="3" fill="none" />
                 
                 <AnimatePresence mode="wait">

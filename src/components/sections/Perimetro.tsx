@@ -64,7 +64,7 @@ export function Perimetro() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-6xl mx-auto p-4 sm:p-8 w-full flex-grow flex flex-col justify-center pb-24"
+      className="w-full px-4 sm:px-12 py-8 flex-grow flex flex-col justify-center pb-24"
     >
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
@@ -93,17 +93,9 @@ export function Perimetro() {
               />
 
               {/* The rolling Circle */}
-              <motion.g
-                style={{ 
-                  x: circumference * unrollProgress,
-                  originX: '20px', 
-                  originY: `${50 - radius}px` 
-                }}
-                animate={{
-                  rotate: 360 * unrollProgress,
-                  opacity: progress > 45 ? 0 : 1
-                }}
-                transition={{ duration: 0 }}
+              <g
+                transform={`translate(${circumference * unrollProgress}, 0) rotate(${360 * unrollProgress}, 20, ${50 - radius})`}
+                opacity={progress > 45 ? 0 : 1}
               >
                 <circle cx="20" cy={50 - radius} r={radius} fill="none" stroke="#6366f1" strokeWidth="1.5" />
                 
@@ -124,7 +116,7 @@ export function Perimetro() {
                     <circle cx="17" cy="47" r="1" stroke="#475569" fill="none" strokeWidth="0.5"/>
                   </g>
                 )}
-              </motion.g>
+              </g>
 
               {/* Diameters fitting into the circumference */}
               {/* Diameter 1 */}
